@@ -1,0 +1,48 @@
+name: CI/CD Marketing Analytics Cluster
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Linting dependencies
+      run: pip install flake8
+
+    - name: Lint Python Code
+      run: |
+        flake8 backend/main.py jupyter_scripts/build_roi_datamart.py --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Setup environment
+      run: |
+        echo "POSTGRES_DB=test_db" >> .env
+        echo "POSTGRES_USER=test_user" >> .env
+        echo "POSTGRES_PASSWORD=test_pass" >> .env
+        echo "JUPYTER_TOKEN=test_token" >> .env
+        echo "MB_DB_TYPE=postgres" >> .env
+        echo "MB_DB_DBNAME=test_db" >> .env
+        echo "MB_DB_PORT=5432" >> .env
+        echo "MB_DB_USER=test_user" >> .env
+        echo "MB_DB_PASS=test_pass" >> .env
+        echo "MB_DB_HOST=postgres" >> .env
+
+    - name: Run Integration Test
+      run: |
+        docker compose build
+        docker compose up -d
+        sleep 20
+        curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:80/ | grep 200
+        docker compose down

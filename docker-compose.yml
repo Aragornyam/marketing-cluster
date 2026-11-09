@@ -1,0 +1,98 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: mkt_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - mkt_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend_service:
+    build:
+      context: ./backend
+    container_name: mkt_backend
+    restart: always
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mkt_net
+
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    container_name: mkt_jupyter
+    restart: always
+    environment:
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN}
+      JUPYTER_ENABLE_LAB: 'yes'
+      DB_USER: ${POSTGRES_USER}
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - jupyter_data:/home/jovyan/work
+      - ./jupyter_scripts:/home/jovyan/work/scripts
+    networks:
+      - mkt_net
+    command: start-notebook.sh --NotebookApp.token='${JUPYTER_TOKEN}'
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: mkt_metabase
+    restart: always
+    environment:
+      MB_DB_TYPE: ${MB_DB_TYPE}
+      MB_DB_DBNAME: ${MB_DB_DBNAME}
+      MB_DB_PORT: ${MB_DB_PORT}
+      MB_DB_USER: ${MB_DB_USER}
+      MB_DB_PASS: ${MB_DB_PASS}
+      MB_DB_HOST: ${MB_DB_HOST}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mkt_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: mkt_nginx
+    restart: always
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:81:81"
+      - "127.0.0.1:82:82"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend_service
+      - jupyter
+      - metabase
+    networks:
+      - mkt_net
+
+networks:
+  mkt_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.77.0.0/24
+
+volumes:
+  pg_data:
+  jupyter_data:

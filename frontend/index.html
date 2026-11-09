@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Платформа Маркетинговой Аналитики</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-box">M</div>
+                <span class="brand-name">MarketingOps</span>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active">Дашборд управления</a>
+                <a href="http://127.0.0.1:82/lab/workspaces/auto-s/tree/scripts/build_roi_datamart.py" target="_blank" class="menu-item">ETL Скрипты (Jupyter)</a>
+                <a href="http://127.0.0.1:81" target="_blank" class="menu-item">BI Отчеты (Metabase)</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="topbar">
+                <h1 class="page-title">Интеграция данных</h1>
+                <div class="user-profile">
+                    <span class="status-dot"></span> База данных подключена
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="card col-span-2">
+                    <div class="card-header">
+                        <h2>Загрузка новых метрик</h2>
+                        <p class="subtitle">Импорт последних данных по рекламным кампаниям из внешних источников в хранилище PostgreSQL.</p>
+                    </div>
+                    <div class="card-body action-area">
+                        <button id="loadBtn" class="btn-primary">Запустить импорт данных</button>
+                        <div class="status-box">
+                            <span id="statusIndicator" class="indicator idle"></span>
+                            <span id="statusMsg">Система ожидает запуска</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Состояние хранилища</h2>
+                        <p class="subtitle">Сырые метрики в базе (marketing_metrics)</p>
+                    </div>
+                    <div class="card-body stat-area">
+                        <div class="metric-value" id="recordCount">0</div>
+                        <div class="metric-label">Записей готово к анализу</div>
+                        <button id="refreshBtn" class="btn-secondary mt-15">Обновить статус</button>
+                    </div>
+                </div>
+
+                <div class="card col-span-3">
+                    <div class="card-header">
+                        <h2>Аналитическая инфраструктура</h2>
+                    </div>
+                    <div class="card-body infra-grid">
+                        <div class="infra-item">
+                            <div class="infra-icon jupyter-icon">J</div>
+                            <div class="infra-info">
+                                <h3>Jupyter Lab</h3>
+                                <p>Среда для запуска Python-скриптов трансформации данных (Data Prep & ETL).</p>
+                                <a href="http://127.0.0.1:82" target="_blank" class="link">Открыть среду →</a>
+                            </div>
+                        </div>
+                        <div class="infra-item">
+                            <div class="infra-icon metabase-icon">M</div>
+                            <div class="infra-info">
+                                <h3>Metabase BI</h3>
+                                <p>Платформа для визуализации подготовленных витрин данных и построения графиков.</p>
+                                <a href="http://127.0.0.1:81" target="_blank" class="link">Перейти к дашбордам →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

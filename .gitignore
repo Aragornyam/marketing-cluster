@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+jupyter_scripts/.ipynb_checkpoints/
+
+# Секреты и окружение
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
