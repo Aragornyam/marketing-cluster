@@ -1,0 +1,65 @@
+:root {
+    --bg-app: #0B0F19;
+    --bg-sidebar: #111827;
+    --bg-surface: #1E293B;
+    --bg-subtle: #0F172A;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --border-color: #334155;
+    color-scheme: dark !important;
+}
+
+.stApp {
+    background-color: var(--bg-app) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-testid="stSidebar"] {
+    background-color: var(--bg-sidebar) !important;
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.stMarkdown, .stText, h1, h2, h3, h4, h5, h6, p, label, span {
+    color: var(--text-primary) !important;
+}
+
+.stButton > button[kind="secondary"],
+.stDownloadButton > button {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+    border: 1px solid #475569 !important;
+    font-weight: 500 !important;
+}
+.stButton > button[kind="secondary"]:hover,
+.stDownloadButton > button:hover {
+    background-color: #334155 !important;
+    border-color: #64748B !important;
+}
+
+.stButton > button[kind="primary"] {
+    background-color: #2563EB !important;
+    color: #FFFFFF !important;
+    border: 1px solid #3B82F6 !important;
+}
+
+header[data-testid="stHeader"] button {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+header[data-testid="stHeader"] button:hover {
+    background-color: var(--border-color) !important;
+    border-color: var(--text-secondary) !important;
+}
+
+header[data-testid="stHeader"] button svg {
+    fill: var(--text-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+header[data-testid="stHeader"] button:focus {
+    box-shadow: none !important;
+}

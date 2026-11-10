@@ -1,0 +1,145 @@
+[data-testid="stDeployButton"],
+[data-testid="stAppDeployButton"],
+.stDeployButton,
+#MainMenu,
+[data-testid="stMainMenu"],
+[data-testid="stStatusWidget"],
+[data-testid="stDecoration"],
+footer {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    border-bottom: none !important;
+}
+
+.block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2.5rem !important;
+    max-width: 1400px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600 !important;
+    letter-spacing: -0.015em;
+}
+
+.brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+.brand-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+.brand-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.nav-section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin: 16px 0 8px 0;
+}
+
+.service-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    text-decoration: none !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.service-link:hover {
+    border-color: #2563EB;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+.service-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background-color: var(--bg-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.service-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary) !important;
+    line-height: 1.2;
+}
+.service-caption {
+    font-size: 0.75rem;
+    color: var(--text-secondary) !important;
+    margin-top: 2px;
+}
+
+.status-bar {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px 14px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot-online { background-color: #10B981; }
+.dot-offline { background-color: #EF4444; }
+.dot-wait { background-color: #F59E0B; }
+
+[data-testid="stMetric"] {
+    background-color: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    padding: 14px 16px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+[data-testid="stMetricLabel"] p {
+    color: var(--text-secondary) !important;
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+}
+[data-testid="stMetricValue"] div {
+    color: var(--text-primary) !important;
+    font-size: 1.55rem !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background-color: var(--bg-surface) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+}

@@ -3,6 +3,7 @@ import os
 import time
 from faker import Faker
 import random
+import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String, Numeric, Date, func
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
@@ -51,7 +52,9 @@ def load_data(db: Session = Depends(get_db)):
         campaigns = ['Google Search Ads', 'Meta Retargeting', 'LinkedIn B2B', 'Email Promo Q3', 'TikTok Influencers']
         new_records = []
         
-        for _ in range(50):
+        records_count = random.randint(30, 150)
+        
+        for _ in range(records_count):
             campaign = random.choice(campaigns)
             impressions = random.randint(10000, 200000)
             clicks = int(impressions * random.uniform(0.01, 0.08))
@@ -76,6 +79,33 @@ def load_data(db: Session = Depends(get_db)):
         return {"status": "success", "message": f"Успешно обработано и загружено {len(new_records)} записей."}
     except Exception as e:
         db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/build_datamart")
+def build_datamart():
+    try:
+        df = pd.read_sql('SELECT * FROM marketing_metrics', engine)
+        if df.empty:
+            return {"status": "warning", "message": "Нет данных для построения витрины."}
+
+        df['roas'] = (df['revenue'] / df['spend']).replace([float('inf'), -float('inf')], 0).fillna(0)
+        df['cpa'] = (df['spend'] / df['conversions']).replace([float('inf'), -float('inf')], 0).fillna(0)
+        df['net_profit'] = df['revenue'] - df['spend']
+
+        datamart = df.groupby('campaign_name').agg({
+            'spend': 'sum',
+            'revenue': 'sum',
+            'conversions': 'sum',
+            'roas': 'mean',
+            'cpa': 'mean',
+            'net_profit': 'sum'
+        }).reset_index()
+
+        datamart = datamart.round(2)
+        datamart.to_sql('campaign_roi_mart', engine, if_exists='replace', index=False)
+        
+        return {"status": "success", "message": "Витрина данных (ROI/CPA) успешно пересчитана!"}
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/stats")

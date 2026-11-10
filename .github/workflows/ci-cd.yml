@@ -3,8 +3,7 @@ name: CI/CD Marketing Analytics Cluster
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch: 
 
 jobs:
   build-and-test:
@@ -22,27 +21,36 @@ jobs:
     - name: Install Linting dependencies
       run: pip install flake8
 
-    - name: Lint Python Code
+    - name: Lint Python Code (Линтинг)
       run: |
-        flake8 backend/main.py jupyter_scripts/build_roi_datamart.py --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 backend/main.py frontend/app.py frontend/ui_components.py --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Setup environment
+    - name: Setup environment (Подготовка .env)
       run: |
-        echo "POSTGRES_DB=test_db" >> .env
-        echo "POSTGRES_USER=test_user" >> .env
-        echo "POSTGRES_PASSWORD=test_pass" >> .env
+        echo "POSTGRES_DB=marketing_db" >> .env
+        echo "POSTGRES_USER=market_admin" >> .env
+        echo "POSTGRES_PASSWORD=supersecret_db_pass_2026" >> .env
         echo "JUPYTER_TOKEN=test_token" >> .env
         echo "MB_DB_TYPE=postgres" >> .env
-        echo "MB_DB_DBNAME=test_db" >> .env
+        echo "MB_DB_DBNAME=marketing_db" >> .env
         echo "MB_DB_PORT=5432" >> .env
-        echo "MB_DB_USER=test_user" >> .env
-        echo "MB_DB_PASS=test_pass" >> .env
+        echo "MB_DB_USER=market_admin" >> .env
+        echo "MB_DB_PASS=supersecret_db_pass_2026" >> .env
         echo "MB_DB_HOST=postgres" >> .env
 
-    - name: Run Integration Test
+    - name: Deploy Cluster (Развертывание)
       run: |
-        docker compose build
-        docker compose up -d
-        sleep 20
+        docker compose up -d --build
+
+    - name: Integration Testing (Интеграционное тестирование)
+      run: |
+        echo "Ожидание готовности Nginx и API..."
+        timeout 60s bash -c 'until curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:80/api/stats | grep -q "200"; do sleep 5; done'
+        
+        echo "Проверка фронтенда..."
         curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:80/ | grep 200
-        docker compose down
+
+    - name: Teardown (Очистка окружения)
+      if: always()
+      run: |
+        docker compose down -v
